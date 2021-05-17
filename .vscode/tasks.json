@@ -12,7 +12,7 @@
                 "command": "powershell",
                 "args": [
                     "-c",
-                    "mingw32-make"
+                    "make"
                 ]
             },
             "linux": {
@@ -62,7 +62,7 @@
                 "command": "powershell",
                 "args": [
                     "-c",
-                    "'mingw32-make clean'"
+                    "'make clean'"
                 ]
             },
             "linux": {
