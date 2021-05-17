@@ -35,26 +35,30 @@ public:
     ~VertexBufferLayout() = default;
     
     template<typename T>
-    void Push(Identity<T>,unsigned int count)
+    void Push(unsigned int count)
     {
-        if(std::is_floating_point_v<T>)
-        {
-            mElements.push_back({GL_FLOAT, count,GL_FALSE});
-            mStride += VertexBufferElement::getSize(GL_FLOAT) * count;
-        }
-        if(std::is_integral_v<T>)
-        {
-            mElements.push_back({GL_UNSIGNED_INT, count,GL_FALSE});
-            mStride += VertexBufferElement::getSize(GL_UNSIGNED_INT) * count;
-        }
+        push(Identity<T>(), count);
  
     }
 
-    void Push(Identity<unsigned char>, unsigned int count)
+    void push(Identity<unsigned char>, unsigned int count)
     {
         mElements.push_back({GL_UNSIGNED_BYTE, count,GL_FALSE});
         mStride += VertexBufferElement::getSize(GL_UNSIGNED_BYTE) * count;
     }
+
+    void push(Identity<float>, unsigned int count)
+    {
+        mElements.push_back({GL_FLOAT, count,GL_FALSE});
+        mStride += VertexBufferElement::getSize(GL_FLOAT) * count;
+    }
+
+    void push(Identity<unsigned int>, unsigned int count)
+    {
+        mElements.push_back({GL_UNSIGNED_INT, count,GL_FALSE});
+        mStride += VertexBufferElement::getSize(GL_UNSIGNED_INT) * count;
+    }
+
 
     inline const unsigned int getMstride() const { return mStride;};
     inline const std::vector<VertexBufferElement> getElements() const {return mElements;}

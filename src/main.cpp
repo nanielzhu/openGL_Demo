@@ -135,8 +135,7 @@ int main()
     VertexArray va;
     VertexBuffer vb(position, sizeof(position));
     VertexBufferLayout layout;
-    Identity<T> i;
-    layout.Push<float>(Identity<float> i,2);
+    layout.Push<float>(2);
     va.addBuffer(vb, layout);
     IndexBuffer ib(indices, 6* sizeof(unsigned int));
 
