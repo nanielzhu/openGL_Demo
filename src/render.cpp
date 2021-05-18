@@ -1,11 +1,14 @@
 #include <iostream>
-#include "render.h"
+#include "Render.h"
 #include <GL/Glew.h>
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
 
 void glClearError()
 {
     while(glGetError() != GL_NO_ERROR );
-};
+}
 
 bool glCheckError(const char* func, const char* file, int line)
 {
@@ -15,4 +18,17 @@ bool glCheckError(const char* func, const char* file, int line)
         return false;
     }
     return true;
-};
+}
+
+void Render::Clear()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Render::Draw(VertexArray& va, IndexBuffer& ib, Shader& shader)
+{
+    va.Bind();
+    ib.Bind();
+    shader.Bind();
+    glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+}

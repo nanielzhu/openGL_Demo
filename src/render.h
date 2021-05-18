@@ -11,3 +11,15 @@ const unsigned int SCR_HEIGHT = 600;
 
 void glClearError();
 bool glCheckError(const char* func, const char* file, int line);
+class VertexArray;
+class IndexBuffer;
+class Shader;
+
+class Render
+{
+public:
+    void Clear();
+    void Draw(VertexArray& va, IndexBuffer& ib, Shader& shader);
+    Render() = default;
+    ~Render() = default;
+};

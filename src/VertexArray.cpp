@@ -24,7 +24,7 @@ void VertexArray::Unbind() const
 void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
     Bind();
-    vb.bind();
+    vb.Bind();
     const auto& elements = layout.getElements();
     unsigned int offset = 0;
     for(unsigned int i =0; i< elements.size(); i++)

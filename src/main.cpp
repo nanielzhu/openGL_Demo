@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <ctime>
-#include "render.h"
+#include "Render.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
@@ -70,10 +70,11 @@ int main()
     float increment = 0.05f;
     std::srand(std::time(nullptr));
     int factor = rand()%10;
+    Render render;
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
-        glClear(GL_COLOR_BUFFER_BIT);
+        render.Clear();
          if (x > 1.0f || y > 1.0f || z > 1.0f )
             increment = -0.05f;
         if( x < 0.0f || y < 0.0f || z < 0.0f )
@@ -87,7 +88,7 @@ int main()
         factor = rand()%10;
         z += factor * increment;
         shader.ChangeColor4f(x, y, z, 1.0f);
-        glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        render.Draw(va,ib,shader);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
