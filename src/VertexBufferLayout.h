@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <gl/Glew.h>
-#include <type_traits>
 
 struct VertexBufferElement 
 {
