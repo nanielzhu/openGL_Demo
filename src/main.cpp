@@ -8,6 +8,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Shader.h"
+#include "Texture.h"
 
 void processInput(GLFWwindow *window)
 {
@@ -36,7 +37,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(2);
+    glfwSwapInterval(10);
         // glad: load all OpenGL function pointers
         // ---------------------------------------
     if (glewInit() != GLEW_OK)
@@ -45,49 +46,56 @@ int main()
             return -1;
     }
      // render loop
-    // -----------
+
+    float position[] = {
+            -0.7f,-0.9f, 0.0f, 0.0f, //0
+             0.7f,-0.9f, 1.0f, 0.0f, //1
+             0.7f, 0.9f, 1.0f, 1.0f, //2
+            -0.7f, 0.9f, 0.0f, 1.0f  //3
+    };
+    /*
     float position[] = {
             -0.5f,-0.5f, //0
              0.5f,-0.5f, //1
              0.5f, 0.5f, //2
             -0.5f, 0.5f  //3
     };
-
+    */
     unsigned int indices[] = {
             0, 1, 2,
             2, 3, 0
     };
+//    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+//    glEnable(GL_BLEND);
     VertexArray va;
     VertexBuffer vb(position, sizeof(position));
     VertexBufferLayout layout;
     layout.Push<float>(2);
+    layout.Push<float>(2);
     va.addBuffer(vb, layout);
-    IndexBuffer ib(indices, 6* sizeof(unsigned int));
+    IndexBuffer ib(indices, 6);
+
     Shader shader("src/shader/Basic.shader");
- 
-    float x = 0.5f, y = 0.1f, z = 0.2f;
-    shader.SetUniform4f("u_Color", x, y, z, 1.0f);
-    float increment = 0.05f;
-    std::srand(std::time(nullptr));
-    int factor = rand()%10;
+    shader.Bind();
+    shader.SetUniform4f("u_Color", 0.3f, 0.8f, 0.1f, 1.0f);
+
+    Texture texture("src/res/yuqi.jpg");
+    texture.Bind(0);
+    shader.SetUniform1i("u_Texture",0);
+
+    va.Unbind();
+    vb.Unbind();
+    ib.Unbind();
+    shader.Unbind();
     Render render;
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
         render.Clear();
-         if (x > 1.0f || y > 1.0f || z > 1.0f )
-            increment = -0.05f;
-        if( x < 0.0f || y < 0.0f || z < 0.0f )
-            increment = 0.05f;
-
-        x += factor * increment;
-        std::srand(std::time(nullptr));
-        factor = rand()%10;
-        y += factor * increment;
-        std::srand(std::time(nullptr));
-        factor = rand()%10;
-        z += factor * increment;
-        shader.ChangeColor4f(x, y, z, 1.0f);
+     //   shader.Bind();
+        
+        shader.SetUniform4f("u_Color",0.3f, 0.8f, 0.1f, 1.0f);
+        
         render.Draw(va,ib,shader);
         glfwSwapBuffers(window);
         glfwPollEvents();

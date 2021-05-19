@@ -14,15 +14,14 @@ private:
     unsigned int mRenderID;
     const std::string filePath;
     std::unordered_map<std::string, int> locationCache;
-    std::string mColor;
 
 public:
     Shader(const std::string filePath);
     ~Shader();
     void Bind() const;
     void Unbind() const;
+    void SetUniform1i(const std::string& colorname, int values);
     void SetUniform4f(const std::string& colorname, float v1, float v2, float v3, float v4);
-    void ChangeColor4f(float v1, float v2, float v3, float v4);
 
 private:
     unsigned int CompileShader(unsigned int type, const std::string& source);
