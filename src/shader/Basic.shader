@@ -7,11 +7,11 @@ layout(location = 2) in vec2 textCoord;
 
 out vec2 v_TextCoord;
 out vec3 v_TextColor;
-uniform vec4 u_MVP;
+uniform mat4 u_MVP;
 
 void main()
 {  
-    gl_Position = vec4(position, 0.0f, 1.0f);   
+    gl_Position = u_MVP * vec4(position, 0.0f, 1.0f);   
     v_TextColor = textColor;
     v_TextCoord = textCoord;
 };
