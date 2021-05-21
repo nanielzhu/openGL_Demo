@@ -6,8 +6,8 @@
                     ASSERT(glCheckError(#func, __FILE__,__LINE__))
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 760;
 
 void glClearError();
 bool glCheckError(const char* func, const char* file, int line);

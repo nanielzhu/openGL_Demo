@@ -97,18 +97,23 @@ unsigned int Shader::CreateShader(const std::string& vertexshader, const std::st
     return program;
 }
 
-void Shader::SetUniform1i(const std::string& colorname, int values)
+void Shader::SetUniform1i(const std::string& name, int values)
 {
-    int location = GetUniformlocation(colorname);
+    int location = GetUniformlocation(name);
     glUniform1i(location, values);
 }
 
-void Shader::SetUniform4f(const std::string& colorname, float v1, float v2, float v3, float v4)
+void Shader::SetUniform4f(const std::string& name, float v1, float v2, float v3, float v4)
 {
-    int location = GetUniformlocation(colorname);
+    int location = GetUniformlocation(name);
     glUniform4f(location, v1, v2, v3, v4);
 }
 
+void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
+{
+    int location = GetUniformlocation(name);
+    glUniformMatrix4fv(location, 1,GL_FALSE, &matrix[0][0]);
+}
 
 int Shader::GetUniformlocation(const std::string& colorname)
 {
