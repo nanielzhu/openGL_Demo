@@ -115,6 +115,12 @@ void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
     glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
+void Shader::SetUniformMat4fv(const std::string& name, const glm::mat4& value)
+{
+    int location = GetUniformlocation(name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
 int Shader::GetUniformlocation(const std::string& colorname)
 {
     if(locationCache.find(colorname) != locationCache.end())

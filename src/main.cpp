@@ -12,6 +12,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+
+
 void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -39,7 +41,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(20);
+    glfwSwapInterval(10);
         // glad: load all OpenGL function pointers
         // ---------------------------------------
     if (glewInit() != GLEW_OK)
@@ -47,30 +49,29 @@ int main()
             std::cout << "Failed to initialize GLEW" << std::endl;
             return -1;
     }
-     // render loop
+     
 
-    
+    /*
     float position[] = {
             200.0f,200.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, //0
             500.0f,200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, //1
             500.0f,400.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, //2
             200.0f,400.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  //3
     };
-    
-   /*
+    */
+   
    float position[] = {
             -0.5f,-0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, //0
              0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, //1
              0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, //2
             -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  //3
     };
-    */
+    
     unsigned int indices[] = {
             0, 1, 2,
             2, 3, 0
     };
-//    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-//    glEnable(GL_BLEND);
+
     VertexArray va;
     VertexBuffer vb(position, sizeof(position));
     VertexBufferLayout layout;
@@ -82,50 +83,52 @@ int main()
 
     Shader shader("src/shader/Basic.shader");
     shader.Bind();
-    shader.SetUniform4f("u_Color", 0.3f, 0.8f, 0.1f, 1.0f);
+    //shader.SetUniform4f("u_Color", 0.3f, 0.8f, 0.1f, 1.0f);
 
-    Texture texture("src/res/yuqi.jpg");
-    texture.Bind(0);
+    Texture texture("src/res/container.jpg", 0);
     shader.SetUniform1i("u_Texture",0);
+
+    Texture text1("src/res/awesomeface.png", 1);
+    shader.SetUniform1i("u_Texture1",1);
+    
     va.Unbind();
     vb.Unbind();
     ib.Unbind();
     shader.Unbind();
     Render render;
     
+    /*
     float x = 0.0f, z = 0.0f;
     float y = 1000.0f, w = 760.0f;
-    float increment = 100.0f;
-    
+    */
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
         render.Clear();
+    
+        texture.Bind(0);
+        text1.Bind(1);
 
-        shader.SetUniform4f("u_Color",0.3f, 0.8f, 0.1f, 1.0f);
-        
-        glm::mat4 proj=glm::ortho(x, y, z, w, -1.0f, 1.0f);
-        
-        glm::mat4 view =glm::translate(glm::mat4(1.0f), glm::vec3(-increment,0,0));
-        glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(increment,-increment,0));
-        
-        glm::mat4 mvp = proj * view * model;
-        shader.SetUniformMat4f("u_MVP", mvp);
-        
-        render.Draw(va,ib,shader);
-        
-        float timevalue = glfwGetTimerValue();
-        float increment = 100.0 * (glm::sin(timevalue));
-        if (( y >900.0f || w > 700.0f)&&(increment > 10.0))
-            increment = -increment;
-        if(( y < 50.0f || w < 50.0f) &&(increment < 10.0))
-            increment = -increment;
-        y += increment;
-        w += increment;
         /*
         glm::mat4 proj=glm::ortho(x, y, z, w, -1.0f, 1.0f);
-        shader.SetUniformMat4f("u_MVP", proj);
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.1f, -0.1f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
         */
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+        glm::mat4 view = glm::mat4(1.0f);
+        // note that we're translating the scene in the reverse direction of where we want to move
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
+        glm::mat4 proj;
+        proj = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+        glm::mat4 trans = proj * view * model;
+
+        shader.SetUniformMat4fv("u_MVP", trans);
+        
+        render.Draw(va,ib,shader);
+      
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

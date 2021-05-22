@@ -25,8 +25,9 @@ in vec3 v_TextColor;
 
 uniform vec4 u_Color;
 uniform sampler2D u_Texture;
+uniform sampler2D u_Texture1;
 
 void main() 
 {
-    color = texture(u_Texture, v_TextCoord) * vec4(v_TextColor, 1.0f);
+    color = mix(texture(u_Texture, v_TextCoord), texture(u_Texture1, vec2(1.0f-v_TextCoord.x,v_TextCoord.y)), 0.2);
 };
