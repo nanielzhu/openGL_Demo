@@ -19,7 +19,7 @@ class Render
 {
 public:
     void Clear();
-    void Draw(VertexArray& va, IndexBuffer& ib, Shader& shader);
+    void Draw(VertexArray& va, IndexBuffer& ib, Shader& shader, bool aDraw);
     Render() = default;
     ~Render() = default;
 };

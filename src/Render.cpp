@@ -25,10 +25,13 @@ void Render::Clear()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render::Draw(VertexArray& va, IndexBuffer& ib, Shader& shader)
+void Render::Draw(VertexArray& va, IndexBuffer& ib, Shader& shader, bool aDraw)
 {
     va.Bind();
     ib.Bind();
     shader.Bind();
-    glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+    if(aDraw)
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    else
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
 }
