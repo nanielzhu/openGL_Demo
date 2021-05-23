@@ -10,6 +10,7 @@ void glClearError()
     while(glGetError() != GL_NO_ERROR );
 }
 
+
 bool glCheckError(const char* func, const char* file, int line)
 {
     while(GLenum error = glGetError())

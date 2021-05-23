@@ -6,14 +6,15 @@
                     ASSERT(glCheckError(#func, __FILE__,__LINE__))
 
 // settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 760;
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 void glClearError();
 bool glCheckError(const char* func, const char* file, int line);
 class VertexArray;
 class IndexBuffer;
 class Shader;
+
 
 class Render
 {
@@ -23,3 +24,4 @@ public:
     Render() = default;
     ~Render() = default;
 };
+
