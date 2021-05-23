@@ -40,9 +40,8 @@ public:
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
     void ProcessMouseMovement(float& xoffset, float& yoffset, GLboolean constrainPitch = true);
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset);
+    void setZoom(float yoffset);
     void processKeyControl(GLFWwindow *window);
-    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     const glm::vec3 getPosition() const { return mPosition;};
     const glm::vec3 getFront() const { return mFront;};
     const glm::vec3 getUp() const { return mUp;};

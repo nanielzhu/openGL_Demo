@@ -1,5 +1,5 @@
 #pragma once
-
+#include "glm/glm.hpp"
 #define ASSERT(func) if(!(func)) __debugbreak();
 #define glCall(func) glClearError();\
                     func;\
@@ -8,6 +8,8 @@
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+extern glm::vec3 cubePositions[];
 
 void glClearError();
 bool glCheckError(const char* func, const char* file, int line);

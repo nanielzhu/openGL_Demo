@@ -13,6 +13,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "Glutil.h"
 #include "Camera.h"
+#include "Mvp.h"
 
 int main()
 {
@@ -155,19 +156,20 @@ int main()
         text1.Bind(1);
         camera.processKeyControl(window);
         camera.ProcessMouseMovement(xOffset, yOffset, true);
+        camera.setZoom(mFov);
         glm::mat4 view= camera.GetViewMatrix(); 
         //setViewwithCamera(view);
         //setViewwithcontrol(view, camera.getPosition(), camera.getFront(), camera.getUp());
-        glm::mat4 proj;
-        setProjwithcontrol(proj, camera.getZoom());
+        Mvp proj;
+        proj.setProjwithcontrol(camera.getZoom());
 
         for(unsigned int i = 0; i < 10; i++)
         {
             // calculate the model matrix for each object and pass it to shader before drawing
             
-            glm::mat4 model;
-            setModelwithloc(model,i);
-            glm::mat4 trans = proj * view * model;
+            Mvp model;
+            model.setModelwithloc(i);
+            glm::mat4 trans = proj.getMvp() * view * model.getMvp();
             shader.SetUniformMat4fv("u_MVP", trans);
             arrayDraw = true;
             render.Draw(va, ib, shader, arrayDraw);
