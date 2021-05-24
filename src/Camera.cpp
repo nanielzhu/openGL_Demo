@@ -1,12 +1,12 @@
 #include "Camera.h"
 
 // timing
-static float deltaTime = 0.0f;	// time between current frame and last frame
+
 static float lastFrame = 0.0f;
 
 // constructor with vectors
 Camera::Camera(glm::vec3 position, glm::vec3  up, float yaw, float pitch) 
-        :mPosition(position),mWorldUp(up), mFront(glm::vec3(0.0f, 0.0f, -1.0f)), mYaw(yaw), mPitch(pitch), 
+        :mPosition(position),mFront(glm::vec3(0.0f, 0.0f, -1.0f)),mWorldUp(up), mYaw(yaw), mPitch(pitch), 
         mMovementSpeed(SPEED), mMouseSensitivity(SENSITIVITY), mZoom(ZOOM)
 {
     updateCameraVectors();

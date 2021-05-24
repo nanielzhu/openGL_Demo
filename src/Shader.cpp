@@ -5,7 +5,7 @@
 #include <GL/Glew.h>
 #include <iostream>
 
-Shader::Shader(const std::string filePath):filePath(filePath),mRenderID(0)
+Shader::Shader(const std::string filePath):filePath(filePath)
 {
 
     ShaderSource source = ParseShader("src/shader/Basic.shader");

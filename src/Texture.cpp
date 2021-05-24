@@ -4,7 +4,7 @@
 #include <iostream>
 
 Texture::Texture(const std::string filePath, unsigned int rgba)
-        :mRenderID(0),mFilePath(filePath), mRgba(rgba),mLocalBuffer(nullptr),mHeight(0),mWidth(0),mBPP(0)
+        :mRenderID(0),mFilePath(filePath), mRgba(rgba),mLocalBuffer(nullptr),mWidth(0),mHeight(0),mBPP(0)
 {
     stbi_set_flip_vertically_on_load(1);
     mLocalBuffer = stbi_load(mFilePath.c_str(), &mWidth, &mHeight, &mBPP, 0);

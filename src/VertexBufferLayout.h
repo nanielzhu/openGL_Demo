@@ -59,8 +59,8 @@ public:
     }
 
 
-    inline const unsigned int getMstride() const { return mStride;};
-    inline const std::vector<VertexBufferElement> getElements() const {return mElements;}
+    inline unsigned int getMstride() const { return mStride;};
+    inline const  std::vector<VertexBufferElement>& getElements() const {return mElements;}
 };
 
 

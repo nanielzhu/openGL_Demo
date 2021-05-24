@@ -42,8 +42,8 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     glfwSwapInterval(10);
-        // glad: load all OpenGL function pointers
-        // ---------------------------------------
+    // glew: load all OpenGL function pointers
+    // ---------------------------------------
     if (glewInit() != GLEW_OK)
     {
             std::cout << "Failed to initialize GLEW" << std::endl;
@@ -128,7 +128,6 @@ int main()
 
     Shader shader("src/shader/Basic.shader");
     shader.Bind();
-    //shader.SetUniform4f("u_Color", 0.3f, 0.8f, 0.1f, 1.0f);
 
     Texture texture("src/res/container.jpg", 0);
     shader.SetUniform1i("u_Texture",0);
@@ -143,10 +142,7 @@ int main()
     Render render;
     
     bool arrayDraw = false;
-    /*
-    glm::mat4 proj;
-    setProj(proj);
-    */
+  
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -160,16 +156,16 @@ int main()
         glm::mat4 view= camera.GetViewMatrix(); 
         //setViewwithCamera(view);
         //setViewwithcontrol(view, camera.getPosition(), camera.getFront(), camera.getUp());
-        Mvp proj;
-        proj.setProjwithcontrol(camera.getZoom());
+        Mvp mvp;
+        glm::mat4 proj = mvp.ToProjwithcontrol(camera.getZoom());
 
         for(unsigned int i = 0; i < 10; i++)
         {
             // calculate the model matrix for each object and pass it to shader before drawing
             
-            Mvp model;
-            model.setModelwithloc(i);
-            glm::mat4 trans = proj.getMvp() * view * model.getMvp();
+            Mvp mvp;
+            glm::mat4 model=mvp.ToModelwithloc(i);
+            glm::mat4 trans = proj * view * model;
             shader.SetUniformMat4fv("u_MVP", trans);
             arrayDraw = true;
             render.Draw(va, ib, shader, arrayDraw);

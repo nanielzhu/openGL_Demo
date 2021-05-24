@@ -42,13 +42,13 @@ public:
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void setZoom(float yoffset);
     void processKeyControl(GLFWwindow *window);
-    const glm::vec3 getPosition() const { return mPosition;};
-    const glm::vec3 getFront() const { return mFront;};
-    const glm::vec3 getUp() const { return mUp;};
-    const float getZoom() const { return mZoom;};
+    const glm::vec3& getPosition() const { return mPosition;};
+    const glm::vec3& getFront() const { return mFront;};
+    const glm::vec3& getUp() const { return mUp;};
+    inline float getZoom() const { return mZoom;};
 
 private:
-        // camera Attributes
+    // camera Attributes
     glm::vec3 mPosition;
     glm::vec3 mFront;
     glm::vec3 mUp;

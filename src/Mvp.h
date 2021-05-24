@@ -10,12 +10,11 @@ private:
     glm::mat4 mMvp;
 public:
     Mvp() { mMvp = glm::mat4(1.0f); };
-    void setViewwithMovingCam();
-    void setViewwithcontrol( glm::vec3 aPos, glm::vec3 aFront, glm::vec3 aUp);
-    void setViewReverse();
-    void setProj();
-    void setProjwithcontrol(float angle);
-    void setModelwithloc( unsigned int i);
-    void setModelwithrotate();
-    const glm::mat4 getMvp() const { return mMvp ;};
+    const glm::mat4& ToViewwithMovingCam();
+    const glm::mat4& ToViewwithcontrol(glm::vec3 aPos, glm::vec3 aFront, glm::vec3 aUp);
+    const glm::mat4& ToViewReverse();
+    const glm::mat4& ToProj();
+    const glm::mat4& ToProjwithcontrol(float angle);
+    const glm::mat4& ToModelwithloc( unsigned int i);
+    const glm::mat4& ToModelwithrotate();
 };

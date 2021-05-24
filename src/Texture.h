@@ -15,6 +15,6 @@ public:
     ~Texture();
     void Bind(unsigned int slot = 0) const;
     void Unbind() const;
-    inline const int getmHeight() const { return mHeight;};
-    inline const int getmWidth() const { return mWidth;};
+    inline  int getmHeight() const { return mHeight;};
+    inline  int getmWidth() const { return mWidth;};
 };
