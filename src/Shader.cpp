@@ -5,11 +5,13 @@
 #include <GL/Glew.h>
 #include <iostream>
 
-Shader::Shader(const std::string filePath):filePath(filePath)
+Shader::Shader(const std::string vertexfile, const std::string fragmentfile)
+                    :mVertexFile(vertexfile),mFragmentFile(fragmentfile)
 {
 
-    ShaderSource source = ParseShader("src/shader/Basic.shader");
-    mRenderID = CreateShader(source.vertexsource,source.fragmentsource);
+    std::string vertexsource = ParseShader(mVertexFile);
+    std::string fragmentsource = ParseShader(mFragmentFile);
+    mRenderID = CreateShader(vertexsource, fragmentsource);
     glUseProgram(mRenderID);
 }
 
@@ -52,35 +54,17 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 }
 
 
-ShaderSource Shader::ParseShader(const std::string& filepath)
+std::string Shader::ParseShader(const std::string& file)
 {
-    std::ifstream stream(filepath,std::ifstream::in);
+    std::ifstream stream(file,std::ifstream::in);
     if(!stream.is_open())
         std::cout<<"error to open file\n";
-    enum class ShaderType {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-    std::string line;
-    std::stringstream  ss[2];
-    ShaderType type = ShaderType::NONE;
-    while (getline(stream, line))
-    {
-        if(line.find("#shader") != std::string::npos)
-        {
-
-            if(line.find("vertex") != std::string::npos)
-            {
-                type = ShaderType::VERTEX;
-            } else if(line.find("fragment") != std::string::npos)
-            {
-                type = ShaderType::FRAGMENT;
-            }
-        } else
-        {
-            ss[int(type)] <<line <<'\n';
-        }
-    }
-    return {ss[0].str(), ss[1].str() };
+    std::stringstream vStream;
+    // read file's buffer contents into streams
+    vStream << stream.rdbuf();	
+    // close file handlers
+    stream.close();
+    return vStream.str();
 }
 
 unsigned int Shader::CreateShader(const std::string& vertexshader, const std::string& fragmentshader)
@@ -133,4 +117,10 @@ int Shader::GetUniformlocation(const std::string& colorname)
     }
     locationCache[colorname] = location;
     return location;
+}
+
+void Shader::SetUniformVec3(const std::string& name, float v1, float v2, float v3)
+{
+    int location = GetUniformlocation(name);
+    glUniform3f(location, v1,v2,v3);
 }

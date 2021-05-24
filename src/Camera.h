@@ -29,7 +29,8 @@ public:
         RIGHT
     };
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+    Camera(glm::vec3 position, glm::vec3 up, float yaw = YAW, float pitch = PITCH);
+    Camera(glm::vec3 position);
     // constructor with scalar values
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
@@ -41,7 +42,7 @@ public:
     void ProcessMouseMovement(float& xoffset, float& yoffset, GLboolean constrainPitch = true);
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void setZoom(float yoffset);
-    void processKeyControl(GLFWwindow *window);
+    void ProcessKeyControl(GLFWwindow *window);
     const glm::vec3& getPosition() const { return mPosition;};
     const glm::vec3& getFront() const { return mFront;};
     const glm::vec3& getUp() const { return mUp;};

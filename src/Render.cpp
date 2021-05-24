@@ -49,3 +49,10 @@ void Render::Draw(VertexArray& va, IndexBuffer& ib, Shader& shader, bool aDraw)
     else
         glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
 }
+
+void Render::Draw(VertexArray& va, Shader& shader)
+{
+    va.Bind();
+    shader.Bind();
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}

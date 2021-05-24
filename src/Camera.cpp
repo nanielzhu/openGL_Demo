@@ -12,6 +12,14 @@ Camera::Camera(glm::vec3 position, glm::vec3  up, float yaw, float pitch)
     updateCameraVectors();
 }
 
+// constructor with vectors
+Camera::Camera(glm::vec3 position) 
+        :mPosition(position),mFront(glm::vec3(0.0f, 0.0f, -1.0f)),mWorldUp(glm::vec3(0.0f, 1.0f, 0.0f)), mYaw(YAW), mPitch(PITCH), 
+        mMovementSpeed(SPEED), mMouseSensitivity(SENSITIVITY), mZoom(ZOOM)
+{
+    updateCameraVectors();
+}
+
 // constructor with scalar values
 Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) 
         : mFront(glm::vec3(0.0f, 0.0f, -1.0f)),mYaw(yaw), mPitch(pitch),
@@ -93,7 +101,7 @@ void Camera::updateCameraMove()
 }
 
 
-void Camera::processKeyControl(GLFWwindow *window)
+void Camera::ProcessKeyControl(GLFWwindow *window)
 {
     float currentFrame = glfwGetTime();
     float deltaTime = currentFrame - lastFrame;

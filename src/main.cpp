@@ -1,7 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <ctime>
 #include "Render.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -49,9 +48,11 @@ int main()
             std::cout << "Failed to initialize GLEW" << std::endl;
             return -1;
     }
-     
+
+    glm::vec3 lightPos(0.8f, 0.8f, 0.8f);
+
     float position[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -94,82 +95,62 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    /*
-    float position[] = {
-            200.0f,200.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, //0
-            500.0f,200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, //1
-            500.0f,400.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, //2
-            200.0f,400.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  //3
-    };
-    */
-   /*
-   float position[] = {
-            -0.5f,-0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, //0
-             0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, //1
-             0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, //2
-            -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  //3
-    };
-    */
-    unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0
-    };
 
     glEnable(GL_DEPTH_TEST); 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);   
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);   
 
-    VertexArray va;
+    VertexArray cubeVAO;
     VertexBuffer vb(position, sizeof(position));
     VertexBufferLayout layout;
     layout.Push<float>(3);
     layout.Push<float>(2);
-    va.addBuffer(vb, layout);
-    IndexBuffer ib(indices, 6);
+    cubeVAO.addBuffer(vb, layout);
 
-    Shader shader("src/shader/Basic.shader");
-    shader.Bind();
+    VertexArray lightVAO;
+    lightVAO.addBuffer(vb,layout);
 
-    Texture texture("src/res/container.jpg", 0);
-    shader.SetUniform1i("u_Texture",0);
-
-    Texture text1("src/res/awesomeface.png", 1);
-    shader.SetUniform1i("u_Texture1",1);
+    Shader cubeshader("src/shader/Cube.vs", "src/shader/Cube.fs");
+    Shader lightshader("src/shader/Light.vs", "src/shader/Light.fs");
     
-    va.Unbind();
-    vb.Unbind();
-    ib.Unbind();
-    shader.Unbind();
+    lightVAO.Unbind();
+    cubeVAO.Unbind();
+   
     Render render;
     
-    bool arrayDraw = false;
-  
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
         render.Clear();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        texture.Bind(0);
-        text1.Bind(1);
-        camera.processKeyControl(window);
+        camera.ProcessKeyControl(window);
         camera.ProcessMouseMovement(xOffset, yOffset, true);
         camera.setZoom(mFov);
-        glm::mat4 view= camera.GetViewMatrix(); 
-        //setViewwithCamera(view);
-        //setViewwithcontrol(view, camera.getPosition(), camera.getFront(), camera.getUp());
+        //Cube Shader begin
+        cubeshader.Bind();
+        cubeshader.SetUniformVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        cubeshader.SetUniformVec3("lightColor",  0.5f, 0.5f, 0.5f);
+        // view/projection transformations
         Mvp mvp;
-        glm::mat4 proj = mvp.ToProjwithcontrol(camera.getZoom());
+        glm::mat4 proj =mvp.ToProjwithcontrol(camera.getZoom()); 
+        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 cubetrans = proj * view * model;
+        cubeshader.SetUniformMat4fv("u_MVP",cubetrans);
 
-        for(unsigned int i = 0; i < 10; i++)
-        {
-            // calculate the model matrix for each object and pass it to shader before drawing
-            
-            Mvp mvp;
-            glm::mat4 model=mvp.ToModelwithloc(i);
-            glm::mat4 trans = proj * view * model;
-            shader.SetUniformMat4fv("u_MVP", trans);
-            arrayDraw = true;
-            render.Draw(va, ib, shader, arrayDraw);
-        }
+        // render the cube
+        render.Draw(cubeVAO, cubeshader);
+
+         // also draw the lamp object
+        lightshader.Bind();
+        lightshader.SetUniformVec3("lightColor",  0.5f, 0.5f, 0.5f);
+        Mvp lightmvp;
+        glm::mat4 lightmodel = lightmvp.ToModelwithScale(lightPos, 0.3f);
+        glm::mat4 lighttrans = proj * view * lightmodel;
+        lightshader.SetUniformMat4fv("u_MVP", lighttrans);
+
+        render.Draw(lightVAO, lightshader);
+
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

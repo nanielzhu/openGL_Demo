@@ -6,8 +6,8 @@
                     ASSERT(glCheckError(#func, __FILE__,__LINE__))
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 760;
 
 extern glm::vec3 cubePositions[];
 
@@ -23,6 +23,7 @@ class Render
 public:
     void Clear();
     void Draw(VertexArray& va, IndexBuffer& ib, Shader& shader, bool aDraw);
+    void Draw(VertexArray& va, Shader& shader);
     Render() = default;
     ~Render() = default;
 };

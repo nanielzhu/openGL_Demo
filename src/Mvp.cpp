@@ -34,7 +34,6 @@ const glm::mat4& Mvp::ToProj()
 
 const glm::mat4& Mvp::ToProjwithcontrol(float angle)
 {
-
         mMvp = glm::perspective(glm::radians(angle), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         return mMvp;
 
@@ -50,5 +49,12 @@ const glm::mat4& Mvp::ToModelwithloc(unsigned int i)
 const glm::mat4& Mvp::ToModelwithrotate()
 {
         mMvp = glm::rotate(mMvp, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        return mMvp;
+}
+
+const glm::mat4& Mvp::ToModelwithScale(glm::vec3& pos, float scale)
+{
+        mMvp = glm::translate(mMvp, pos);
+        mMvp = glm::scale(mMvp, glm::vec3(scale)); // a smaller cub
         return mMvp;
 }
