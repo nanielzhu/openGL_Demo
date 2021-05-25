@@ -39,9 +39,9 @@ const glm::mat4& Mvp::ToProjwithcontrol(float angle)
 
 }
 
-const glm::mat4& Mvp::ToModelwithloc(unsigned int i)
+const glm::mat4& Mvp::ToModelwithloc(const glm::vec3 pos[],unsigned int i)
 {
-        mMvp = glm::translate(mMvp, cubePositions[i]);
+        mMvp = glm::translate(mMvp, pos[i]);
         float angle = 20.0f * i;
         mMvp = glm::rotate(mMvp, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         return mMvp;

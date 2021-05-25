@@ -22,9 +22,12 @@ public:
     void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
     void SetUniformMat4fv(const std::string& name, const glm::mat4& value);
     void SetUniformVec3(const std::string& name, float v1, float v2, float v3);
+    void SetUniformVec3(const std::string& name, const glm::vec3 value);
+    void SetUniformVec3(const std::string& name, const float value);
 
 private:
     unsigned int CompileShader(unsigned int type, const std::string& source);
+    void checkCompileErrors(unsigned int shader, std::string type);
     std::string ParseShader(const std::string& file);
     unsigned int CreateShader(const std::string& vertexshader, const std::string& fragmentshader);
     int GetUniformlocation(const std::string&);

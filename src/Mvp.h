@@ -15,7 +15,7 @@ public:
     const glm::mat4& ToViewReverse();
     const glm::mat4& ToProj();
     const glm::mat4& ToProjwithcontrol(float angle);
-    const glm::mat4& ToModelwithloc( unsigned int i);
+    const glm::mat4& ToModelwithloc( const glm::vec3 pos[],unsigned int i);
     const glm::mat4& ToModelwithrotate();
     const glm::mat4& ToModelwithScale(glm::vec3&, float scale);
 };

@@ -36,21 +36,38 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
     const char* src = source.c_str();
     glShaderSource(id, 1, &src, nullptr);
     glCompileShader(id);
-    int result;
-    glGetShaderiv(id,GL_COMPILE_STATUS, &result);
-    if( result == GL_FALSE)
-    {
-        int length;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));
-        glGetShaderInfoLog(id,length,&length, message);
-        std::cout << "Failed to compile " <<
-        (type == GL_VERTEX_SHADER? "Vertex":"Fragment")<<" Shader"<<std::endl;
-        std::cout<<message<<std::endl;
-        glDeleteShader(id);
-        return 0;
-    }
+    std::string atype = "PROGRAM";
+    if(type == GL_VERTEX_SHADER)
+        atype = "VERTEX";
+    if(type == GL_FRAGMENT_SHADER)
+        atype = "FRAGMENT";
+
+    checkCompileErrors(id, atype);
     return id;
+}
+
+void Shader::checkCompileErrors(unsigned int shader, std::string type)
+{
+    GLint success;
+    GLchar infoLog[1024];
+     if(type != "PROGRAM")
+    {
+         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if(!success)
+        {
+            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+        }
+    }
+    else
+    {
+         glGetProgramiv(shader, GL_LINK_STATUS, &success);
+        if(!success)
+        {
+            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+        }
+    }
 }
 
 
@@ -123,4 +140,16 @@ void Shader::SetUniformVec3(const std::string& name, float v1, float v2, float v
 {
     int location = GetUniformlocation(name);
     glUniform3f(location, v1,v2,v3);
+}
+
+void Shader::SetUniformVec3(const std::string& name, const glm::vec3 value)
+{
+    int location = GetUniformlocation(name);
+    glUniform3fv(location, 1, &value[0]); 
+}
+
+void Shader::SetUniformVec3(const std::string& name, const float value)
+{
+    int location = GetUniformlocation(name);
+    glUniform1f(location, value); 
 }

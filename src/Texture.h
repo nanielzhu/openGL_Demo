@@ -1,4 +1,3 @@
-#include "Render.h"
 #include <string>
 
 class Texture

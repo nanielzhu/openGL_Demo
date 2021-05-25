@@ -68,36 +68,38 @@ void Camera::ProcessMouseMovement(float& xoffset, float& yoffset, GLboolean cons
             mPitch = -89.0f;
     }
     // update mFront, Right and Up Vectors using the updated Euler angles
-    updateCameraVectors();
+    updateCameraMove();
 }
 
-    // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-void Camera::setZoom(float yoffset)
+
+void Camera::ProcessScrollMovement(float pos)
 {
-    mZoom = yoffset;
+     mZoom = pos;
 }
 
 void Camera::updateCameraVectors()
 {
         // calculate the new mFront vector
-        glm::vec3 mFront;
-        mFront.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
-        mFront.y = sin(glm::radians(mPitch));
-        mFront.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
-        mFront = glm::normalize(mFront);
+        glm::vec3 front;
+        front.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        front.y = sin(glm::radians(mPitch));
+        front.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        mFront = glm::normalize(front);
+
         // also re-calculate the Right and Up vector
         mRight = glm::normalize(glm::cross(mFront, mWorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         mUp    = glm::normalize(glm::cross(mRight, mFront));
 }
 
+
 void Camera::updateCameraMove()
 {
         // calculate the new mFront vector
-        glm::vec3 mFront;
-        mFront.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
-        mFront.y = sin(glm::radians(mPitch));
-        mFront.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
-        mFront = glm::normalize(mFront);
+        glm::vec3 front;
+        front.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        front.y = sin(glm::radians(mPitch));
+        front.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        mFront = glm::normalize(front);
 }
 
 
@@ -108,9 +110,9 @@ void Camera::ProcessKeyControl(GLFWwindow *window)
     lastFrame = currentFrame;
     float cameraSpeed = mMovementSpeed * deltaTime; 
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        mPosition += cameraSpeed * mFront;
+        mPosition +=  mFront * cameraSpeed;
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        mPosition -= cameraSpeed * mFront;
+        mPosition -=  mFront * cameraSpeed;
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         mPosition -= mRight * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)

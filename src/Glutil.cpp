@@ -1,13 +1,31 @@
 #include "Glutil.h"
 #include "glm/glm.hpp"
+#include <iostream>
 #include "Render.h"
+
 
 bool firstMouse = true;
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 float mFov   =  45.0f;
-float xOffset = SCR_WIDTH / 2.0f;
-float yOffset = SCR_HEIGHT / 2.0f;
+float xOffset = 0;
+float yOffset = 0;
+
+void glClearError()
+{
+    while(glGetError() != GL_NO_ERROR );
+}
+
+
+bool glCheckError(const char* func, const char* file, int line)
+{
+    while(GLenum error = glGetError())
+    {
+        std::cout << "openGL meet error:"<<error<<"in function:"<<func<<"; and file :"<<file<<";line::"<<line<<std::endl;
+        return false;
+    }
+    return true;
+}
 
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
