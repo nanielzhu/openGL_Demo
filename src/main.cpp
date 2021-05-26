@@ -121,6 +121,9 @@ int main()
          // also draw the lamp object
         lightshader.Bind();
         Mvp lightmvp;
+        lightshader.SetUniformVec3("light.ambient",  ambientColor);
+        lightshader.SetUniformVec3("light.diffuse",  diffuseColor); 
+        lightshader.SetUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
         glm::mat4 lightmodel = lightmvp.ToModelwithScale(lightPos, 0.3f);
         glm::mat4 lighttrans = proj * view * lightmodel;
         lightshader.SetUniformMat4fv("u_MVP", lighttrans);
