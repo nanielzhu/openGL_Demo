@@ -130,7 +130,7 @@ int Shader::GetUniformlocation(const std::string& colorname)
     int location = glGetUniformLocation(mRenderID, colorname.c_str());
     if(location == -1)
     {
-        std::cout <<"Uniform Location for "<<colorname<<"doesn't exist\n";
+        std::cout <<"Uniform Location for "<<colorname<<"  doesn't exist\n";
     }
     locationCache[colorname] = location;
     return location;
@@ -148,7 +148,7 @@ void Shader::SetUniformVec3(const std::string& name, const glm::vec3 value)
     glUniform3fv(location, 1, &value[0]); 
 }
 
-void Shader::SetUniformVec3(const std::string& name, const float value)
+void Shader::SetUniform1f(const std::string& name, const float value)
 {
     int location = GetUniformlocation(name);
     glUniform1f(location, value); 

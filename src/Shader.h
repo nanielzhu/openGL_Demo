@@ -23,7 +23,7 @@ public:
     void SetUniformMat4fv(const std::string& name, const glm::mat4& value);
     void SetUniformVec3(const std::string& name, float v1, float v2, float v3);
     void SetUniformVec3(const std::string& name, const glm::vec3 value);
-    void SetUniformVec3(const std::string& name, const float value);
+    void SetUniform1f(const std::string& name, const float value);
 
 private:
     unsigned int CompileShader(unsigned int type, const std::string& source);

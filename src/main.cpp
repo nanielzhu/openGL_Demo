@@ -55,16 +55,17 @@ int main()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);   
 
     VertexArray cubeVAO;
-    VertexBuffer vb(Vertices4Light, sizeof(Vertices4Light));
+    VertexBuffer vb(Vertices4Box, sizeof(Vertices4Box));
     VertexBufferLayout layout;
     layout.Push<float>(3);
     layout.Push<float>(3);
+    layout.Push<float>(2);
     cubeVAO.addBuffer(vb, layout);
 
     VertexArray lightVAO;
     lightVAO.addBuffer(vb,layout);
 
-    Shader cubeshader("src/shader/Cube.vs", "src/shader/Cube.fs");
+    Shader cubeshader("src/shader/Box.vs", "src/shader/Box.fs");
     Shader lightshader("src/shader/Light.vs", "src/shader/Light.fs");
     
     lightVAO.Unbind();
@@ -72,6 +73,8 @@ int main()
    
     Render render;
     Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    Texture texture("src/res/container2.png");
+    Texture texture1("src/res/container2_specular.png");
     
     while (!glfwWindowShouldClose(window))
     {
@@ -86,14 +89,12 @@ int main()
         cubeshader.Bind();
 
         cubeshader.SetUniformVec3("viewPos", camera.getPosition());
-
-        cubeshader.SetUniformVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        cubeshader.SetUniformVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-        cubeshader.SetUniformVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        cubeshader.SetUniformVec3("material.shininess", 32.0f);
-        cubeshader.SetUniformVec3("light.position", lightPos);
+        cubeshader.SetUniform1i("material.diffuse", 0);
+        cubeshader.SetUniform1i("material.specular", 1);
+        cubeshader.SetUniform1f("material.shininess", 64.0f);
 
         //setup light 
+        /*
         glm::vec3 lightColor;
         lightColor.x = sin(glfwGetTime() * 2.0f);
         lightColor.y = sin(glfwGetTime() * 0.7f);
@@ -102,7 +103,11 @@ int main()
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
         cubeshader.SetUniformVec3("light.ambient",  ambientColor);
         cubeshader.SetUniformVec3("light.diffuse",  diffuseColor); 
-        cubeshader.SetUniformVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+        */
+        cubeshader.SetUniformVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        cubeshader.SetUniformVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+        cubeshader.SetUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        cubeshader.SetUniformVec3("light.position", lightPos);
 
         // view/projection transformations
         Mvp mvp;
@@ -116,13 +121,19 @@ int main()
         //cubeshader.SetUniformMat4fv("u_MVP",cubetrans);
 
         // render the cube
+        texture.Bind(0);
+        texture1.Bind(1);
         render.Draw(cubeVAO, cubeshader);
 
          // also draw the lamp object
         lightshader.Bind();
         Mvp lightmvp;
+        /*
         lightshader.SetUniformVec3("light.ambient",  ambientColor);
         lightshader.SetUniformVec3("light.diffuse",  diffuseColor); 
+        */
+        lightshader.SetUniformVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        lightshader.SetUniformVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightshader.SetUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
         glm::mat4 lightmodel = lightmvp.ToModelwithScale(lightPos, 0.3f);
         glm::mat4 lighttrans = proj * view * lightmodel;
